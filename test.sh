@@ -10,4 +10,7 @@ MINGA_OPT='{ "description" : "Overidden description" }'
 #bash -c "python minga.py fixtures/input/layout fixtures/input/template output '$MINGA_DEFAULT_OPT'"
 
 # Should run with default and overriden options
-bash -c "python minga.py fixtures/input/layout fixtures/input/template output '$MINGA_DEFAULT_OPT' '$MINGA_OPT'"
+#bash -c "python minga.py fixtures/input/layout fixtures/input/template output '$MINGA_DEFAULT_OPT' '$MINGA_OPT'"
+
+# Should run when passed empty options
+bash -c "python minga.py fixtures/input/layout fixtures/input/template output '' ''"

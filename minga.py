@@ -22,9 +22,9 @@ layoutDir = sys.argv[1]
 templateDir = sys.argv[2]
 
 templateVars = {}
-if totalArgs > 4:
+if totalArgs > 4 and len(sys.argv[4]) > 0:
   templateVars = json.loads(sys.argv[4])
-  if totalArgs > 5:
+  if totalArgs > 5 and len(sys.argv[5]) > 0:
     templateVars = dict(templateVars.items() + json.loads(sys.argv[5]).items())
 
 outputDir = sys.argv[3]
