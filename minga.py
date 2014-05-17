@@ -32,7 +32,7 @@ if not os.path.exists(outputDir):
   os.makedirs(outputDir)
 
 templateLoader = jinja2.FileSystemLoader( [ layoutDir, templateDir ] )
-templateEnv = jinja2.Environment( loader=templateLoader, lstrip_blocks=True, trim_blocks=True )
+templateEnv = jinja2.Environment( loader=templateLoader )
 
 
 for (dirpath, dirnames, filenames) in walk(templateDir):
