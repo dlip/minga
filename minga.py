@@ -2,13 +2,14 @@ import os
 import sys
 import re
 import jinja2
+import json
 from os import walk
 
 totalArgs = len(sys.argv)
 
-if totalArgs < 6:
+if totalArgs < 4:
   print "Missing arguments"
-  print "python minga.py layoutDir templateDir outputDir DefaultOptions Options"
+  print "python minga.py layoutDir templateDir outputDir JsonDefaultOptions JsonOptions"
   exit(1)
 
 for path in [sys.argv[1], sys.argv[2]]:
@@ -19,6 +20,12 @@ for path in [sys.argv[1], sys.argv[2]]:
 layoutDir = sys.argv[1]
 templateDir = sys.argv[2]
 
+templateVars = {}
+if totalArgs > 4:
+  templateVars = json.loads(sys.argv[4])
+  if totalArgs > 5:
+    templateVars = dict(templateVars.items() + json.loads(sys.argv[5]).items())
+
 outputDir = sys.argv[3]
 if not os.path.exists(outputDir):
   os.makedirs(outputDir)
@@ -26,8 +33,6 @@ if not os.path.exists(outputDir):
 templateLoader = jinja2.FileSystemLoader( [ layoutDir, templateDir ] )
 templateEnv = jinja2.Environment( loader=templateLoader )
 
-templateVars = { "title" : "Test Example",
-                         "description" : "A simple inquiry of function." }
 
 for (dirpath, dirnames, filenames) in walk(templateDir):
   templatePath = re.sub(r"^%s" % templateDir, "", dirpath)
