@@ -85,8 +85,72 @@ minga layoutDir templateDir outputDir [JsonDefaultOptions] [JsonOptions]
 * JsonDefaultOptions (Optional) - JSON string passed to the templates as a python dictionary.
 * JsonOptions (Optional) - A JSON string that will override the default options.
 
+### Running
+
+
 In your docker startup script use something like the following:
 
 ```sh
 bash -c "minga /etc/minga/nginx/layout /etc/minga/nginx/template /etc/nginx '$NGINX_DEFAULT_OPT' '$NGINX_OPT'" 
 ```
+
+### Templating
+
+You can read more about templates at the official [Jinja Website](http://jinja.pocoo.org/docs/templates/). Environment variables are stored in the "env" key.
+
+```sh
+user  {{user}};
+worker_processes  1;
+
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+daemon off;
+error_log /dev/stdout info;
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    access_log /dev/stdout;
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  {{ env.HOME }}/access.log  main;
+
+
+    sendfile        {{sendfile}};
+    gzip            {{gzip.enabled}};
+
+    {% if gzip.enabled == 'on' %}
+
+    gzip_http_version {{gzip.http_version}};
+    gzip_comp_level {{gzip.comp_level}};
+    gzip_proxied    {{gzip.proxied}};
+    gzip_vary       {{gzip.vary}};
+
+    {% if gzip.buffers %}
+    gzip_buffers    {{gzip_buffers}};
+    {% endif %}
+    gzip_types      {{ " ".join(gzip.types) }};
+    gzip_min_length {{gzip.min_length}};
+    gzip_disable    {{gzip.disable}};
+
+
+    {% endif %}
+
+    #tcp_nopush     on;
+
+    keepalive_timeout  65;
+
+
+    include /etc/nginx/conf.d/*.conf;
+}
+```
+

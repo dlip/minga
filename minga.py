@@ -21,9 +21,9 @@ for path in [sys.argv[1], sys.argv[2]]:
 layoutDir = sys.argv[1]
 templateDir = sys.argv[2]
 
-templateVars = {}
+templateVars = { 'env': os.environ }
 if totalArgs > 4 and len(sys.argv[4]) > 0:
-  templateVars = json.loads(sys.argv[4])
+  templateVars = dict(templateVars.items() + json.loads(sys.argv[4]).items())
   if totalArgs > 5 and len(sys.argv[5]) > 0:
     templateVars = dict(templateVars.items() + json.loads(sys.argv[5]).items())
 
